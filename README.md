@@ -1,0 +1,2 @@
+# SchoolManagerServer
+ECUST-task
