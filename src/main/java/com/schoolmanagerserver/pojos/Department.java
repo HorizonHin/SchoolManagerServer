@@ -21,7 +21,4 @@ public class Department implements Serializable {
     private String phone;
     private Long pid;
 
-    // 省略getter和setter方法
-
-    // ... 其他方法
 }
