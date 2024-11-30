@@ -6,7 +6,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 
 @SpringBootApplication
-@MapperScan("com.schoolmanagerserver.pojos")
 @MapperScan("com.schoolmanagerserver.mapper")
 public class SchoolManagerServerApplication {
 

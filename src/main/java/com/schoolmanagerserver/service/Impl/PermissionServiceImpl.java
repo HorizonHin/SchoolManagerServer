@@ -27,7 +27,7 @@ public class PermissionServiceImpl implements PermissionService {
 
     @Override
     public Result<RolePermissionVo> findPermissionTree(Long roleId, Long parentId) {
-        return new Result<>(1, null , new RolePermissionVo());
+        return Result.success(new RolePermissionVo());
     }
 
     @Override

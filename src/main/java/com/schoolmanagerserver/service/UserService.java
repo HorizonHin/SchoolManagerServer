@@ -16,6 +16,10 @@ public interface UserService {
 
     Result<User> findByUsername(String username);
 
+    List<String> findRolesByUsername(String username);
+
+    List<String> findPermissionByRoles(List<String> roles);
+
     //根据页码来找UserList，后续自己写
     Result<List<User>> findUserListByPage();
 

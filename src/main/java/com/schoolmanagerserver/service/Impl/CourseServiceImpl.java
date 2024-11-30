@@ -27,15 +27,15 @@ public class CourseServiceImpl implements CourseService {
                 .map(Integer::parseInt)
                 .toList();
         if (idList.isEmpty()) {
-            return new Result<>(0, "没有请求被删除的id", null);
+            return Result.fail("没有数据");
         }
         int deletedCount = courseMapper.delByIdList(idList);
         if (deletedCount > 0) {
-            return new Result<>(1 , "删除成功" , null);
+            return Result.success();
         }
         else
         {
-            return new Result<>(0 , "删除失败" , null);
+            return Result.fail("删除失败");
         }
     }
 

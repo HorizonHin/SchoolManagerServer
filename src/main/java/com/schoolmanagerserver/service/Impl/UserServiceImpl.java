@@ -30,7 +30,6 @@ public class UserServiceImpl implements UserService {
 
     private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
-
     @Value("${tokenExpireMs}")
     public int tokenExpireMs;
 
@@ -77,10 +76,20 @@ public class UserServiceImpl implements UserService {
         User user = userMapper.findByUsername(username);
         if (user == null) return Result.fail("No such user");
 
-//        Long id = user.getId();
-//        user.setPermissionList(findPermissionByUserId(id));
-//        user.setRoleNameList(findRolesByUserId(id));
+        user.setRoleNameList(findRolesByUsername(username));
+        logger.info("查找到的角色：{}", user.getRoleNameList());
+        user.setPermissionList(findPermissionByRoles(user.getRoleNameList()));
         return Result.success(user);
+    }
+
+    @Override
+    public List<String> findRolesByUsername(String username) {
+        return userMapper.findRolesByUsername(username);
+    }
+
+    @Override
+    public List<String> findPermissionByRoles(List<String> roles) {
+        return userMapper.findPermissionByRoles(roles);
     }
 
     @Override

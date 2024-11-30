@@ -27,4 +27,21 @@
     <insert id="insertUser" parameterType="map" useGeneratedKeys="true" keyProperty="id">
         insert into user(username, password) values(#{username}, #{password})
     </insert>
+
+    <select id="findRolesByUsername" parameterType="String" resultType="String">
+        SELECT ur.role_name
+        FROM user_roles ur
+        WHERE ur.username = #{username}
+    </select>
+
+    <select id="findPermissionByRoles" parameterType="java.util.List" resultType="String">
+        SELECT rp.permission_value
+        FROM role_permissions rp
+        WHERE rp.role_name IN
+        <foreach item="role" collection="roles" open="(" close=")" separator=",">
+            #{role}
+        </foreach>
+    </select>
+
+
 </mapper>

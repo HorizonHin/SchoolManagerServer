@@ -8,7 +8,6 @@ import java.util.List;
 
 @Mapper
 public interface UserMapper {
-    User findById(@Param("id") Long id);
     User findByUsername(@Param("username") String username);
     // 查询用户的角色名称
     List<String> findRolesByUserId(@Param("userId") Long userId);
@@ -16,4 +15,7 @@ public interface UserMapper {
     List<String> findPermissionsByUserId(@Param("userId") Long userId);
 
     int insertUser(String username, String password);
+
+    List<String> findRolesByUsername(String username);
+    List<String> findPermissionByRoles(List<String> roles);
 }
