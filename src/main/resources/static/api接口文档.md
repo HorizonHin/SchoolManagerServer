@@ -25,7 +25,6 @@
 
 请求参数样例：
 
-```json
 {
   "username": "admin",
   "password": "123456"
