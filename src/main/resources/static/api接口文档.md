@@ -7,7 +7,7 @@
 #### 0.1 基本信息
 
 > 请求路径：/user/login
->
+>role_permissions
 > 请求方式：POST
 >
 > 接口描述：该接口用于用户登录
