@@ -107,6 +107,46 @@
 #### 0.2.3 响应数据
 参数格式：application/json
 
+### 0.3新增用户
+#### 0.3.1 基本信息
+
+> 请求路径：/admin/addUser
+>
+> 请求方式：POST
+>
+> 接口描述：该接口用于新增用户
+
+#### 0.3.2 请求参数
+
+格式：application/json
+
+参数说明：
+
+| 参数名 | 类型   | 是否必须 | 备注   |
+| ------ | ------ | -------- | ------ |
+| username | string | 必须     | 用户名 |
+| email | string | 必须     | 密码   |
+| password | string | 必须     | 确认密码   |
+| role | Array<String> | 必须     | 角色权限   |
+
+请求参数样例：
+
+```json
+{
+  "username": "admin",
+  "email": "123456",
+  "password": "123456",
+  "role": {
+    "admin"
+  }
+}
+
+
+
+
+
+
+
 ## 1. 课程管理
 
 ### 1.1 课程列表查询

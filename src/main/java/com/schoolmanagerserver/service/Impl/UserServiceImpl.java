@@ -122,4 +122,12 @@ public class UserServiceImpl implements UserService {
         return userMapper.insertUser(username, password)>0?
                 Result.success():Result.fail("失败");
     }
+
+    @Override
+    public <E>Result<E> addUser(String username, String password, String email, String role) {
+        Integer status = 0;
+        int res = userMapper.addUser(username, password, email, role,status);
+        if (res > 0) return Result.success();
+        return Result.fail("加入失败");
+    }
 }

@@ -13,7 +13,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public <E> Result<E> handleException(Exception e) {
-        logger.error("发生异常：", e);
+        logger.error("发生异常：{}", e.getMessage());
         String errorMessage = StringUtils.hasLength(e.getMessage()) ? e.getMessage() : "操作失败";
         return Result.fail(errorMessage);
     }
@@ -26,7 +26,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(IllegalArgumentException.class)
     public <E> Result<E> handleIllegalArgumentException(IllegalArgumentException e) {
-        logger.error("非法参数异常：", e);
+        logger.error("非法参数异常：{}", e.getMessage());
         return Result.fail("非法参数：" + e.getMessage());
     }
 }
