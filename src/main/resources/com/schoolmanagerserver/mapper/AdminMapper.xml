@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.schoolmanagerserver.mapper.AdminMapper">
+    <insert id="addUser" statementType="CALLABLE">
+        {CALL add_user(
+        #{username, jdbcType=VARCHAR},
+        #{password, jdbcType=VARCHAR},
+        #{email, jdbcType=VARCHAR},
+        #{role, jdbcType=VARCHAR},
+        #{status, jdbcType=INTEGER, mode=OUT}
+        )}
+    </insert>
+
+    <select id="selectRole" resultType="String">
+        SELECT `name` FROM `role`;
+    </select>
+
+    <insert id="addRole" useGeneratedKeys="true">
+        insert into `role`(name) values (#{newRoleName})
+    </insert>
+
+    <select id="findAllUsers" resultType="User">
+        SELECT id, username, real_name, email
+        FROM user
+    </select>
+</mapper>

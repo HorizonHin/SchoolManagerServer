@@ -18,10 +18,5 @@ public interface UserMapper {
 
     List<String> findRolesByUsername(String username);
     List<String> findPermissionByRoles(List<String> roles);
-    int addUser(@Param("username") String username,
-                     @Param("password") String password,
-                     @Param("email") String email,
-                     @Param("role") String role,@Param("status") Integer status);
-
 
 }

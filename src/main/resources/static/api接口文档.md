@@ -141,7 +141,251 @@
   }
 }
 
+### 0.4查询角色
+#### 0.4.1 基本信息
 
+> 请求路径：/admin/selectRole
+
+> 请求方式：GET
+
+> 接口描述：该接口用于查询角色
+
+#### 0.4.2 请求参数
+
+无
+
+#### 0.4.3 响应数据
+
+参数格式：application/json
+
+参数说明：
+
+| 参数名 | 类型   | 是否必须 | 备注                           |
+| ------ | ------ | -------- | --------- |
+| success   | boolean | 必须     | 响应码，1 代表成功，0 代表失败 |
+| msg    | string | 非必须   | 提示信息                       |
+| data   | object | 非必须   | 返回的数据                     |
+| \|- roleName | string | 非必须   | 角色名称                       |
+| \|- rolePermissions | Array<string> | 非必须   | 角色权限列表                     |
+
+响应数据样例：
+
+```json
+{
+  "success": true,
+  "msg": "success",
+  "data": [
+    {
+      "roleName": "admin",
+      "rolePermissions": ["read", "write", "delete"]
+    },
+    {
+      "roleName": "teacher",
+      "rolePermissions": ["read", "write", "delete"]
+    },
+    {
+      "roleName": "student",
+      "rolePermissions": ["read", "write", "delete"]
+    }
+  ]
+}
+
+
+### 0.5新增角色
+#### 0.5.1 基本信息
+
+> 请求路径：/admin/addRole
+>
+> 请求方式：POST
+>
+> 接口描述：该接口用于新增角色
+
+#### 0.5.2 请求参数
+
+格式：application/json
+
+参数说明：
+
+| 参数名 | 类型   | 是否必须 | 备注   |
+| ------ | ------ | -------- | ------ |
+| roleName | string | 必须     | 角色名称 |
+
+请求参数样例：
+
+```json
+{
+  "newRoleName": "admin",
+}
+
+### 0.6 查找所有用户
+#### 0.6.1 基本信息
+
+> 请求路径：/admin/users
+>
+> 请求方式：GET
+>
+> 接口描述：该接口用于查询所有用户
+
+#### 0.6.2 请求参数
+
+无
+
+#### 0.6.3 响应数据
+
+参数格式：application/json
+
+参数说明：
+
+| 参数名           | 类型           | 是否必须 | 备注                           |
+| ---------------- | ---------     | -------- | ---------- |
+| success             | boolean        | 必须     | 响应码，1 代表成功，0 代表失败 |
+| msg              | string        | 非必须   | 提示信息                       |
+| data             | object[]      | 非必须   | 返回的数据                     |
+| \|- real_name           | number         | 非必须   | id                             |
+| \|- username     | string        | 非必须   | 用户名                         |
+| \|- email        | string        | 非必须   | 邮箱                           |
+
+响应数据样例：
+
+```json
+{
+  "success": true,
+  "msg": "success",
+  "data": [
+    {
+      "real_name": "张三",
+      "username": "admin",
+      "email": "123456"
+    },
+    {
+      "username": "teacher",
+      "email": "123456"
+    },
+    {
+      "username": "student",
+      "email": "123456"
+    }
+  ]
+}
+
+### 0.7 查询所有权限树
+#### 0.7.1 基本信息
+
+> 请求路径：/admin/permissions
+>
+> 请求方式：GET
+>
+> 接口描述：该接口用于查询所有权限树
+
+#### 0.7.2 请求参数
+
+无
+
+#### 0.7.3 响应数据
+
+参数格式：application/json
+
+参数说明：
+
+| 参数名           | 类型           | 是否必须 | 备注                           |
+| ---------------- | ---------     | -------- | ---------- |
+| success             | boolean        | 必须     | 响应码，1 代表成功，0 代表失败 |
+| msg              | string        | 非必须   | 提示信息                       |
+| data             | object[]      | 非必须   | 返回的数据                     |
+| \|- id           | number         | 非必须   | id                             |
+| \|- name         | string        | 非必须   | 权限名称                       |
+| \|- parentId     | number         | 非必须   | 父权限ID                       |
+| \|- children     | object[]      | 非必须   | 子权限列表                     |
+| \|- \|- id       | number         | 非必须   | 子权限ID                       |
+| \|- \|- name     | string        | 非必须   | 子权限名称                     |
+| \|- \|- parentId | number         | 非必须   | 子权限父ID                     |
+
+响应数据样例：
+
+```json
+{
+  "success": true,
+  "msg": "success",
+  "data": [
+    {
+      "id": 1,
+      "name": "系统管理",
+      "parentId": null,
+      "children": [
+        {
+          "id": 2,
+          "name": "用户管理",
+          "parentId": 1,
+          "children": [
+            {
+              "id": 3,
+              "name": "新增用户",
+              "parentId": 2
+            },
+            {
+              "id": 4,
+              "name": "删除用户",
+              "parentId": 2
+            },
+            {
+              "id": 5,
+              "name": "修改用户",
+              "parentId": 2
+            }
+          ]
+        },
+        {
+          "id": 6,
+          "name": "角色管理",
+          "parentId": 1,
+          "children": [
+            {
+              "id": 7,
+              "name": "新增角色",
+              "parentId": 6
+            },
+            {
+              "id": 8,
+              "name": "删除角色",
+              "parentId": 6
+            },
+            {
+              "id": 9,
+              "name": "修改角色",
+              "parentId": 6
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "name": "课程管理",
+      "parentId": null,
+      "children": [
+        {
+          "id": 11,
+          "name": "课程列表",
+          "parentId": 10
+        },
+        {
+          "id": 12,
+          "name": "新增课程",
+          "parentId": 10
+        },
+        {
+          "id": 13,
+          "name": "删除课程",
+          "parentId": 10
+        },
+        {
+          "id": 14,
+          "name": "修改课程",
+          "parentId": 10
+        }
+      ]
+    }
+  ]
 
 
 

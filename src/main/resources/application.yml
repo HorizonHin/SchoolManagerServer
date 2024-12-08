@@ -4,8 +4,8 @@ spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/schmng
-    username: root
-    password: 244466666
+    username:
+    password:
 
 
 

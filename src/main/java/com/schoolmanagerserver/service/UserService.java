@@ -30,6 +30,4 @@ public interface UserService {
     Result<Boolean> saveUserRole(Long userId, List<Long> roleIds);
 
     <E> Result<E> register(String username, String password, String repeatPassword);
-
-    <E>Result<E> addUser(String username, String password, String email, String role);
 }

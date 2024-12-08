@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.schoolmanagerserver.mapper.PermissionMapper">
+    <select id="getAllPermissions" resultType="Permission">
+        SELECT
+        id,
+        code,
+        create_time AS createTime,
+        icon,
+        is_delete AS isDelete,
+        label,
+        open,
+        order_num AS orderNum,
+        parent_id AS parentId,
+        parent_name AS parentName,
+        path,
+        remark,
+        type,
+        update_time AS updateTime,
+        url,
+        value
+        FROM permission
+        WHERE is_delete = 0
+        ORDER BY parent_id, order_num
+    </select>
+
+    <!-- 调用存储过程进行软删除权限节点和真删除关联表数据 -->
+    <delete id="deletePermission">
+        CALL delete_permission_and_associations(#{permissionId})
+    </delete>
+
+
+    <insert id="insertPermission">
+
+        INSERT INTO permission (code, label, icon, parent_id, path, value, order_num, type, url, remark, is_delete, create_time, update_time)
+        VALUES
+        <foreach collection="list" item="permission" separator=",">
+            (#{permission.code}, #{permission.label}, #{permission.icon}, #{permission.parentId}, #{permission.path}, #{permission.value},
+            #{permission.orderNum}, #{permission.type}, #{permission.url}, #{permission.remark}, #{permission.isDelete}, NOW(), NOW())
+        </foreach>
+    </insert>
+
+    <update id="updatePermission" parameterType="Permission">
+        UPDATE permission
+        SET
+        code = #{permission.code},
+        icon = #{permission.icon},
+        is_delete = #{permission.isDelete},
+        label = #{permission.label},
+        open = #{permission.open},
+        order_num = #{permission.orderNum},
+        parent_id = #{permission.parentId},
+        parent_name = #{permission.parentName},
+        path = #{permission.path},
+        remark = #{permission.remark},
+        type = #{permission.type},
+        update_time = #{permission.updateTime},
+        url = #{permission.url},
+        value = #{permission.value}
+        WHERE id = #{permission.id}
+    </update>
+
+    <select id="findChildrenByParentId" resultType="java.lang.Long">
+        SELECT id
+        FROM permission
+        WHERE parent_id = #{parentId}
+    </select>
+
+    <!-- 删除 role_permissions 中与权限相关的记录 -->
+    <delete id="deleteRolePermissions">
+        DELETE FROM role_permissions
+        WHERE permission_id = #{permissionId}
+    </delete>
+
+    <!-- 软删除 permission 表中的记录 -->
+    <update id="softDeletePermission">
+        UPDATE permission
+        SET is_delete = 1
+        WHERE id = #{permissionId}
+    </update>
+
+    <select id="getPermissionsByRoleName">
+        SELECT p.* FROM permission p
+        JOIN role_permissions rp ON rp.permission_id = p.id
+        WHERE rp.role_name = #{roleName} AND p.is_delete = 0
+    </select>
+
+    <insert id="insertPermissionsForRole" parameterType="map">
+        INSERT INTO role_permissions (role_name, permission_id)
+        <foreach collection="permissions" item="permissionId" open="VALUES " separator=",">
+            (#{roleName}, #{permissionId})
+        </foreach>
+    </insert>
+
+    <!-- 删除角色的权限 -->
+    <delete id="deletePermissionsForRole" parameterType="map">
+        <foreach collection="permissions" item="permissionId" separator="OR">
+            DELETE FROM role_permissions
+            WHERE role_name = #{roleName} AND permission_id = #{permissionId}
+        </foreach>
+    </delete>
+
+</mapper>
+

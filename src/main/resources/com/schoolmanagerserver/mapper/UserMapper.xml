@@ -43,15 +43,5 @@
         </foreach>
     </select>
 
-    <insert id="addUser" statementType="CALLABLE">
-        {CALL add_user(
-        #{username, jdbcType=VARCHAR},
-        #{password, jdbcType=VARCHAR},
-        #{email, jdbcType=VARCHAR},
-        #{role, jdbcType=VARCHAR},
-        #{status, jdbcType=INTEGER, mode=OUT}
-        )}
-    </insert>
-
 
 </mapper>
