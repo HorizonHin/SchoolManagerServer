@@ -37,6 +37,8 @@ create table permission
     update_time date                 not null,
     url         varchar(255)         null,
     value       varchar(255)         not null,
+    constraint unique_id_value
+        unique (id, value),
     constraint value
         unique (value),
     constraint permission_ibfk_1
@@ -49,14 +51,11 @@ create index parent_id
 
 create table role
 (
-    id   int auto_increment
+    id          int auto_increment
         primary key,
-    name varchar(255) not null,
+    name        varchar(255) not null,
+    description varchar(255) null,
     constraint roleNameUni
-        unique (name),
-    constraint role_name_uni
-        unique (name),
-    constraint role_name_unique
         unique (name)
 );
 
@@ -75,12 +74,12 @@ create index super_ID
 
 create table role_permissions
 (
-    role_name        varchar(255) not null,
-    permission_value varchar(255) not null,
-    primary key (role_name, permission_value),
-    constraint permissions_value_fk
-        foreign key (permission_value) references permission (value),
-    constraint role_name_permission_fk
+    role_name     varchar(255) not null,
+    permission_id bigint       not null,
+    primary key (role_name, permission_id),
+    constraint role_permissions_id_value
+        unique (permission_id),
+    constraint role_permissions_role_name_fk
         foreign key (role_name) references role (name)
 );
 
@@ -131,4 +130,26 @@ create table user_roles
     constraint username_fk
         foreign key (username) references user (username)
 );
+
+create
+    definer = root@localhost procedure add_user(IN p_username varchar(255), IN p_password varchar(255),
+                                                IN p_email varchar(255), IN p_role varchar(50), OUT p_status int)
+BEGIN
+    DECLARE exit_code INT;
+
+    -- 尝试插入到 user 表
+    INSERT INTO user (username, password, email)
+    VALUES (p_username, p_password, p_email);
+
+    -- 插入角色到 user_roles 表
+    INSERT INTO user_roles (username, role_name)
+    VALUES (p_username, p_role);
+
+    -- 检查插入是否成功，设置 p_status
+    IF ROW_COUNT() > 0 THEN
+        SET p_status = 1;  -- 插入成功
+    ELSE
+        SET p_status = 0;  -- 插入失败
+    END IF;
+END;
 

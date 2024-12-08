@@ -35,12 +35,14 @@
     </select>
 
     <select id="findPermissionByRoles" parameterType="java.util.List" resultType="String">
-        SELECT rp.permission_value
-        FROM role_permissions rp
+        SELECT  p.value
+        FROM permission p
+        left join role_permissions rp ON p.id = rp.permission_id
         WHERE rp.role_name IN
         <foreach item="role" collection="roles" open="(" close=")" separator=",">
             #{role}
         </foreach>
+        and p.is_delete = 0
     </select>
 
 
