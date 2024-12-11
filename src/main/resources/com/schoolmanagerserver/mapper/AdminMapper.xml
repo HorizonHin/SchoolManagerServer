@@ -17,6 +17,29 @@
         SELECT `name` FROM `role`;
     </select>
 
+    <select id="getRoleByUsername" resultType="String">
+        select role_name as roleName from user_roles
+        where username  = (#{username})
+    </select>
+
+    <insert id="addUserRole">
+        <if test="RolesToAdd != null and !RolesToAdd.isEmpty()">
+            insert into user_roles (username, role_name)
+            <foreach collection="RolesToAdd" item="rolename" separator="," open="values">
+                (#{username}, #{rolename})
+            </foreach>
+        </if>
+    </insert>
+
+    <delete id="deleteUserRole">
+        DELETE FROM user_roles
+        WHERE username = #{username}
+        AND role_name IN
+        <foreach collection="RolesToRemove" item="rolename" open="(" separator="," close=")">
+            #{rolename}
+        </foreach>
+    </delete>
+
     <insert id="addRole" useGeneratedKeys="true">
         insert into `role`(name) values (#{newRoleName})
     </insert>
@@ -25,4 +48,10 @@
         SELECT id, username, real_name, email
         FROM user
     </select>
+
+    <delete id="deleteRoleByName" parameterType="String">
+        call deleteRoleByName (#{roleName})
+    </delete>
+
+
 </mapper>

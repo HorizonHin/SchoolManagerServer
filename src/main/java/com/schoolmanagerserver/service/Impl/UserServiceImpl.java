@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.sql.SQLException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -51,11 +50,14 @@ public class UserServiceImpl implements UserService {
         claims.put("username", username);
         claims.put("id", user.getId());
         claims.put("role", user.getRoleNameList());
+        logger.info("尝试登录的角色{}", user.getUsername());
 
         String token = jwtUtil.create(claims);
         jwtUtil.storeToken(token, claims);
 
         UserLoginQuery u = new UserLoginQuery();
+
+
         u.setAccessToken(token);
         u.setUsername(username);
         u.setId(user.getId());
@@ -79,6 +81,7 @@ public class UserServiceImpl implements UserService {
 
         user.setRoleNameList(findRolesByUsername(username));
         logger.info("查找到的角色：{}", user.getRoleNameList());
+        if (user.getRoleNameList().isEmpty()) return Result.success(user);
         user.setPermissionList(findPermissionByRoles(user.getRoleNameList()));
         return Result.success(user);
     }

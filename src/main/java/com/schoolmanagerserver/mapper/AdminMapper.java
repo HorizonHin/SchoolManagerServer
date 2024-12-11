@@ -18,4 +18,12 @@ public interface AdminMapper {
     int addRole(String newRoleName);
 
     List<User> findAllUsers();
+
+    void deleteRoleByName(String roleName);
+
+    List<String> getRoleByUsername(String username);
+
+    void addUserRole(String username, List<String> RolesToAdd);
+
+    void deleteUserRole(String username, List<String> RolesToRemove);
 }

@@ -11,8 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -38,6 +37,27 @@ public class AdminController {
     @GetMapping("/selectRole")
     public Result<List<String>> selectRole(){
         return adminService.selectRole();
+    }
+
+    @GetMapping("/roleOfUser")
+    public Result<List<String>> roleOfUser(@RequestParam String username){
+        return adminService.getRoleByUsername(username);
+    }
+
+    @PutMapping("/updateUserRole")
+    public Result<Void> updateUserRole(@RequestBody Map<String, String> updateUserRoleData){
+        String username;
+        String role;
+        List<String> roleList;
+        try {
+            logger.info("新的用户角色{}", updateUserRoleData.toString());
+             username = updateUserRoleData.get("username");
+             role = updateUserRoleData.get("newRole");
+             roleList = Arrays.stream(role.split(",")).filter(str -> !str.isBlank()).toList();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        return adminService.updateUserRole(username,roleList);
     }
 
     @PostMapping("/addRole")
@@ -109,5 +129,19 @@ public class AdminController {
         } else {
             return Result.fail("权限ID不能为空");
         }
+    }
+
+    @DeleteMapping("/deleteRole")
+    public Result<Void> deleteRole(@RequestBody Map<String, String> requestData) {
+        String roleName = requestData.get("roleName");
+        if (roleName == null||roleName.isEmpty()) {
+            return Result.fail("没有传入角色名");
+        }
+
+        if (roleName.equals("admin")) {
+            return Result.fail("admin不可修改");
+        }
+
+        return adminService.deleteRoleByName(roleName);
     }
 }

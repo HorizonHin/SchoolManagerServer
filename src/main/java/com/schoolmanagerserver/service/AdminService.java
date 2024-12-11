@@ -16,4 +16,10 @@ public interface AdminService {
     Result<String> addRole(Map<String, String> addRoleData);
 
      List<User> getAllUsers() ;
+
+    Result<Void> deleteRoleByName(String roleName);
+
+    Result<List<String>> getRoleByUsername(String username);
+
+    Result<Void> updateUserRole(String username, List<String> roleList);
 }
