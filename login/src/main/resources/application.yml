@@ -1,0 +1,29 @@
+spring:
+  application:
+    name: SchoolManagerServer
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/schmng
+    username: root
+    password: 244466666
+
+
+
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      password: ""
+      database: 0
+pagehelper:
+  dialect: mysql
+
+mybatis:
+  type-aliases-package: com.schoolmanagerserver.pojos
+
+#  一天的毫秒数
+tokenExpireMs: 86400000
+JWTKey: aaa
+
+server:
+  port: 8081
