@@ -1,17 +1,22 @@
 package com.schoolmanagerserver.pojos;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.Date;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class StudentCourse {
     // 选课记录主键（可选）
     private Long id;
-
+    // 课程ID（新增，便于与课程关联）
+    private Long courseId;
     // 学生与课程关联
-    private int studentId;
-    private int courseId;
+    private String studentName;
+    private String courseName;
 
     // 学期（例如：2024-2025-1）
     private String semester;
@@ -27,12 +32,4 @@ public class StudentCourse {
 
     // 备注
     private String remark;
-
-    public StudentCourse(int courseId , int studentId)  {
-        this.courseId = courseId;
-        this.studentId = studentId;
-    }
-
-    public StudentCourse() {
-    }
 }

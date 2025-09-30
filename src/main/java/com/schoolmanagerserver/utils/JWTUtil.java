@@ -59,10 +59,12 @@ public class JWTUtil {
 
     // 用以验证Token
     public boolean verifyToken(String token) {
+
         logger.info("验证Token: {}", token);
         try {
             JWTVerifier verifier = JWT.require(Algorithm.HMAC256(JWTKey)).build();
             verifier.verify(token);
+            return true;
             boolean isValid = getToken(token) != null;
             if (isValid) {
                 logger.info("Token 验证通过");

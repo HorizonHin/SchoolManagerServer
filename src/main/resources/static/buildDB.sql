@@ -131,6 +131,33 @@ create table user_roles
         foreign key (username) references user (username)
 );
 
+create table course
+(
+    id          bigint auto_increment primary key,
+    name        varchar(255)      not null,
+    course_num  int               null,
+    course_time varchar(255)      null,
+    course_hours int              null,
+    credit      int               null,
+    teacher_id  bigint            null,
+    teacher_name varchar(255)     null,
+    capacity    int               null,
+    class_size  int               null
+);
+
+create table student_course
+(
+    id           bigint auto_increment primary key,
+    student_name varchar(255) not null,
+    course_id    bigint       not null,
+    semester     varchar(50)  null,
+    status       int          default 0 null,
+    score        int          null,
+    select_time  datetime     null,
+    remark       text         null,
+    constraint fk_student_course_course_id foreign key (course_id) references course (id) on delete cascade
+);
+
 create
     definer = root@localhost procedure add_user(IN p_username varchar(255), IN p_password varchar(255),
                                                 IN p_email varchar(255), IN p_role varchar(50), OUT p_status int)
@@ -152,4 +179,3 @@ BEGIN
         SET p_status = 0;  -- 插入失败
     END IF;
 END;
-

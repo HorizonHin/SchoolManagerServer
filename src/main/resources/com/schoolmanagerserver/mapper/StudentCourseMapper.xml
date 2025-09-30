@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.schoolmanagerserver.mapper.StudentCourseMapper">
+
+    <resultMap id="CourseDtoMap" type="com.schoolmanagerserver.pojos.CourseDto">
+        <result property="username" column="username"/>
+        <result property="coursename" column="coursename"/>
+        <result property="teacher" column="teacher"/>
+    </resultMap>
+
+    <select id="findAllSelectableCourses" resultMap="CourseDtoMap">
+        SELECT '' AS username, c.name AS coursename, c.teacher_name AS teacher
+        FROM course c
+    </select>
+
+    <select id="findSelectedCourses" parameterType="string" resultMap="CourseDtoMap">
+        SELECT sc.student_name AS username, c.name AS coursename, c.teacher_name AS teacher
+        FROM student_course sc
+                 JOIN course c ON sc.course_id = c.id
+        WHERE sc.student_name = #{studentName}
+    </select>
+
+    <delete id="deleteSelectionsByStudent" parameterType="string">
+        DELETE FROM student_course WHERE student_name = #{studentName}
+    </delete>
+
+    <insert id="batchInsertSelections">
+        INSERT INTO student_course (student_name, course_id, select_time)
+        VALUES
+        <foreach collection="courseIds" item="cid" separator=",">
+            (#{studentName}, #{cid}, NOW())
+        </foreach>
+    </insert>
+</mapper>
