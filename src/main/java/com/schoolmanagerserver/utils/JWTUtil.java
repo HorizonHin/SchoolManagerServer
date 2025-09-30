@@ -65,13 +65,13 @@ public class JWTUtil {
             JWTVerifier verifier = JWT.require(Algorithm.HMAC256(JWTKey)).build();
             verifier.verify(token);
             return true;
-            boolean isValid = getToken(token) != null;
-            if (isValid) {
-                logger.info("Token 验证通过");
-            } else {
-                logger.warn("Token 不在有效期内或被删除");
-            }
-            return isValid;
+//            boolean isValid = getToken(token) != null;
+//            if (isValid) {
+//                logger.info("Token 验证通过");
+//            } else {
+//                logger.warn("Token 不在有效期内或被删除");
+//            }
+//            return isValid;
         } catch (JWTVerificationException e) {
             logger.error("Token 验证失败，错误信息: {}", e.getMessage());
             return false;
@@ -81,7 +81,7 @@ public class JWTUtil {
     // 存储Token
     public void storeToken(String token, Map<String, Object> claims) {
         logger.info("存储Token: {}, Claims: {}", token, claims);
-        stringRedisTemplate.opsForValue().set(token, token, tokenExpireMs, TimeUnit.MILLISECONDS);
+//        stringRedisTemplate.opsForValue().set(token, token, tokenExpireMs, TimeUnit.MILLISECONDS);
         ThreadLocalUtil.set(token);
         logger.info("Token 存储成功，Token: {}, 有效期: {} ms", token, tokenExpireMs);
     }

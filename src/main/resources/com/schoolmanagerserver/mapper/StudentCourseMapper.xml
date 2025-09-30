@@ -1,36 +1,45 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.schoolmanagerserver.mapper.StudentCourseMapper">
 
-    <resultMap id="CourseDtoMap" type="com.schoolmanagerserver.pojos.CourseDto">
-        <result property="username" column="username"/>
-        <result property="coursename" column="coursename"/>
-        <result property="teacher" column="teacher"/>
-    </resultMap>
-
-    <select id="findAllSelectableCourses" resultMap="CourseDtoMap">
-        SELECT '' AS username, c.name AS coursename, c.teacher_name AS teacher
+    <!-- 可选课程列表（这里未加容量/时间筛选，可按需扩展） -->
+    <select id="findAllSelectableCourses" resultType="com.schoolmanagerserver.pojos.CourseDto">
+        SELECT c.id AS courseId,
+               NULL AS username,
+               c.name AS coursename,
+               c.teacher_name AS teacher
         FROM course c
+        ORDER BY c.id
     </select>
 
-    <select id="findSelectedCourses" parameterType="string" resultMap="CourseDtoMap">
-        SELECT sc.student_name AS username, c.name AS coursename, c.teacher_name AS teacher
+    <!-- 某学生已选课程 -->
+    <select id="findSelectedCourses" parameterType="string" resultType="com.schoolmanagerserver.pojos.CourseDto">
+        SELECT c.id AS courseId,
+               sc.student_name AS username,
+               c.name AS coursename,
+               c.teacher_name AS teacher
         FROM student_course sc
-                 JOIN course c ON sc.course_id = c.id
+        JOIN course c ON c.id = sc.course_id
         WHERE sc.student_name = #{studentName}
+          AND sc.status = 0
+        ORDER BY c.id
     </select>
 
+    <!-- 删除学生所有已选记录（覆盖提交前调用） -->
     <delete id="deleteSelectionsByStudent" parameterType="string">
         DELETE FROM student_course WHERE student_name = #{studentName}
     </delete>
 
+    <!-- 批量插入新的选课记录（当前示例固定学期，可扩展增加 semester 参数） -->
     <insert id="batchInsertSelections">
-        INSERT INTO student_course (student_name, course_id, select_time)
+        INSERT INTO student_course (student_name, course_id, semester, status, select_time)
         VALUES
         <foreach collection="courseIds" item="cid" separator=",">
-            (#{studentName}, #{cid}, NOW())
+            (#{studentName}, #{cid}, '2024-2025-1', 0, NOW())
         </foreach>
     </insert>
+
 </mapper>
+
