@@ -18,11 +18,4 @@ public class Course {
 
     private int capacity;
     private int classSize;
-
-    // 构造方法（可选）
-
-    public Course(){
-
-    }
-
 }

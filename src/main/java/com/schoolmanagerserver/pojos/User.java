@@ -34,7 +34,7 @@ public class User implements Serializable {
     private boolean isAdmin = false;
     private boolean isCredentialsExpired = false;
     private boolean isDelete;
-    private boolean isEnabled = true;
+    private boolean isEnabled = true; //表示已注销
 
     private List<String> roleNameList;
     private Date updateTime;

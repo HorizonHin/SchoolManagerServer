@@ -19,4 +19,3 @@ public class StudentCourseDto {
     private Date selectTime;    // 选课时间
     private String remark;      // 备注
 }
-

@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.schoolmanagerserver.mapper.ReportMapper">
+
+    <!-- 学生信息分页查询 (仅角色为 student 的用户) -->
+    <select id="queryStudentInfo" parameterType="com.schoolmanagerserver.query.StudentQueryCondition" resultType="com.schoolmanagerserver.pojos.StudentInfoDto">
+        SELECT DISTINCT u.id,
+               u.username,
+               u.real_name    AS realName,
+               u.nick_name    AS nickName,
+               u.email,
+               u.phone,
+               u.mobile,
+               u.gender,
+               u.avatar,
+               u.is_enabled   AS isEnabled
+        FROM user u
+        JOIN user_roles ur ON ur.username = u.username AND ur.role_name = 'student'
+        <where>
+            <if test="username != null and username != ''">
+                AND u.username LIKE CONCAT('%', #{username}, '%')
+            </if>
+            <if test="realName != null and realName != ''">
+                AND u.real_name LIKE CONCAT('%', #{realName}, '%')
+            </if>
+            <if test="email != null and email != ''">
+                AND u.email LIKE CONCAT('%', #{email}, '%')
+            </if>
+            <if test="gender != null">
+                AND u.gender = #{gender}
+            </if>
+            <if test="isEnabled != null">
+                AND u.is_enabled = #{isEnabled}
+            </if>
+        </where>
+        ORDER BY u.id
+    </select>
+
+    <!-- 教师课程列表（成绩列为空） -->
+    <select id="findTeacherCourses" parameterType="string" resultType="com.schoolmanagerserver.pojos.CourseScoreDto">
+        SELECT c.id   AS courseId,
+               c.name AS courseName,
+               c.teacher_name AS teacher,
+               NULL AS semester,
+               NULL AS score,
+               NULL AS status,
+               NULL AS selectTime,
+               NULL AS remark
+        FROM course c
+        WHERE c.teacher_name = #{teacherName}
+        ORDER BY c.id
+    </select>
+
+    <!-- 教师课程下学生成绩列表 -->
+    <select id="findTeacherCourseStudents" resultType="com.schoolmanagerserver.pojos.TeacherCourseStudentDto">
+        SELECT u.username,
+               u.real_name AS realName,
+               c.name      AS courseName,
+               sc.semester,
+               sc.score,
+               sc.status,
+               sc.select_time AS selectTime,
+               sc.remark
+        FROM student_course sc
+        JOIN course c ON c.id = sc.course_id
+        JOIN user u ON u.username = sc.student_name
+        WHERE c.teacher_name = #{teacherName}
+          AND sc.course_id = #{courseId}
+        ORDER BY sc.id
+    </select>
+
+    <!-- 学生个人课程成绩 -->
+    <select id="findStudentScores" parameterType="string" resultType="com.schoolmanagerserver.pojos.CourseScoreDto">
+        SELECT sc.course_id AS courseId,
+               c.name       AS courseName,
+               c.teacher_name AS teacher,
+               sc.semester,
+               sc.score,
+               sc.status,
+               sc.select_time AS selectTime,
+               sc.remark
+        FROM student_course sc
+        JOIN course c ON c.id = sc.course_id
+        WHERE sc.student_name = #{studentName}
+        ORDER BY sc.course_id
+    </select>
+</mapper>
