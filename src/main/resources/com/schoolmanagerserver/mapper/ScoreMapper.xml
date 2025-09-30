@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.schoolmanagerserver.mapper.ScoreMapper">
+
+    <select id="findCoursesByTeacher" parameterType="string" resultType="com.schoolmanagerserver.pojos.CourseInfoDto">
+        SELECT c.id AS courseId,
+               c.name AS courseName,
+               c.teacher_name AS teacher
+        FROM course c
+        WHERE c.teacher_name = #{teacherName}
+        ORDER BY c.id
+    </select>
+
+    <select id="findStudentsByCourseId" parameterType="long" resultType="com.schoolmanagerserver.pojos.StudentCourseDto">
+        SELECT sc.id AS id,
+               sc.course_id AS courseId,
+               sc.student_name AS studentName,
+               c.name AS courseName,
+               sc.semester AS semester,
+               sc.status AS status,
+               sc.score AS score,
+               sc.select_time AS selectTime,
+               sc.remark AS remark
+        FROM student_course sc
+                 JOIN course c ON c.id = sc.course_id
+        WHERE sc.course_id = #{courseId}
+        ORDER BY sc.id
+    </select>
+
+    <update id="updateScoreById">
+        UPDATE student_course SET score = #{score} WHERE id = #{id}
+    </update>
+</mapper>
+
